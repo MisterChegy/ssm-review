@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/util 
+		http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+		http://www.springframework.org/schema/mvc
+		http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	<!-- 使用扫描机制扫描控制器类，控制器类都在包及其子包下 -->
+	<context:component-scan base-package="interceptor.controller"></context:component-scan>
+
+	<!-- 视图解析器 -->
+	<bean id="jspViewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<!-- 前缀 -->
+		<property name="prefix" value="/WEB-INF/jsp/"></property>
+		<!-- 后缀 -->
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+	
+	<mvc:interceptors>
+		<!-- 配置一个全局拦截器，拦截所有请求 -->
+		<!-- <bean class="interceptor.interceptors.TestInterceptor"/> --> 
+		
+		<!-- 配置多个全局拦截器，拦截所有请求 -->
+		<!-- <mvc:interceptor>
+			配置拦截器作用的路径
+			<mvc:mapping path="/**"/>
+			定义在<mvc:interceptor/>元素中，表示匹配指定路径的请求才能进行拦截
+			<bean class="interceptor.interceptors.Interceptor1"/>
+		</mvc:interceptor>
+		<mvc:interceptor>
+			配置拦截器作用的路径
+			<mvc:mapping path="/gotoTest"/>
+			定义在<mvc:interceptor/>元素中，表示匹配指定路径的请求才能进行拦截
+			<bean class="interceptor.interceptors.Interceptor2"/>
+		</mvc:interceptor> --> 
+		
+		<!-- 应用案例-用户登录权限验证 -->
+		<mvc:interceptor>
+			<!-- 配置拦截器作用的路径 -->
+			<mvc:mapping path="/**"/>
+			<bean class="interceptor.controller.LoginInterceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors>
+</beans>		
