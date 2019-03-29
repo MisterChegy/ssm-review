@@ -1,6 +1,7 @@
 package com.mybatis.test;
 
 import java.io.InputStream;
+import java.util.List;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -23,6 +24,27 @@ public class MyBatisTest {
 			//查询一个用户,根据id
 			User user = ss.selectOne("com.mybatis.mapper.UserMapper.selectUserById",1);
 			System.out.println(user);
+			
+			//添加一个用户
+			User addUser = new User();
+			addUser.setUserName("chegy122");
+			addUser.setUserPassword("男");
+			ss.insert("com.mybatis.mapper.UserMapper.addUser",addUser);
+			
+			//修改一个用户
+			User updateUser = new User();
+			updateUser.setId(1);
+			updateUser.setUserName("张三");
+			updateUser.setUserPassword("女");
+			ss.update("com.mybatis.mapper.UserMapper.updateUser",updateUser);
+			
+			//删除一个用户
+			ss.delete("com.mybatis.mapper.UserMapper.deleteUser",3);
+			//查询所有用户
+			List<User> listUser = ss.selectList("com.mybatis.mapper.UserMapper.selectAllUser");
+			for(User user1 : listUser){
+				System.out.println(user1);
+			}
 			
 			//提交事务
 			ss.commit();
