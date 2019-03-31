@@ -33,5 +33,62 @@
   <delete id="deleteUser" parameterType="Integer">
   	delete from user where id = #{id}
   </delete>
+  
+  <!-- 模糊查询 -->
+  <!-- 查询有ch子串的，男性用户信息。使用Map接口传递多个参数 -->
+  <select id="selectSomeUser" resultMap="user" parameterType="map">
+  	select * from user
+  	where user_name like concat('%',#{userName},'%')
+  	and user_password = #{userPassword}
+  </select>
+  
+  <!-- 查询有ch子串的，男性用户信息。使用Java Bean接口传递多个参数 -->
+  <select id="selectManyUser" resultMap="user" parameterType="com.mybatis.model.User">
+  	select * from user
+  	where user_name like concat('%',#{userName},'%')
+  	and user_password = #{userPassword}
+  </select>
+  
+  <!-- 添加一个用户，返回主键，要求主键是自动递增的设置 -->
+  <insert id="addUserReturnId" parameterType="com.mybatis.model.User"
+  keyProperty="id" useGeneratedKeys="true">
+  	insert into user(user_name,user_password) values(#{userName},#{userPassword})
+  </insert>
+  
+    <!-- 一对多  根据id查询用户及其关联的订单信息：级联查询的第一种方法 -->
+	<resultMap type="com.mybatis.model.User" id="userAndOrders1">
+		<id property="id" column="id"/>
+		<result property="userName" column="user_name"/>
+		<result property="userPassword" column="user_password"/>
+		<!-- 一对多级联查询，ofType表示集合中的元素类型，将id传递给selectOrdersById -->
+		<collection property="ordersList" column="id" ofType="com.mybatis.model.Orders" select="com.mybatis.mapper.OrdersMapper.selectOrdersById"/>
+		
+	</resultMap>
+	<select id="selectUserOrdersById1" parameterType="Integer" resultMap="userAndOrders1">
+		select * from user where id=#{id}
+	</select>
+	
+  	<!-- 一对多  根据id查询用户及其关联的订单信息:级联查询的第二种方法（嵌套结果） -->
+  	<resultMap type="com.mybatis.model.User" id="userAndOrders2">
+  		<id property="id" column="id"/>
+  		<result property="userName" column="user_name"/>
+  		<result property="userPassword" column="user_password"/>
+  		<!-- 一对多级联查询，ofType表示集合中的元素类型 -->
+  		<collection property="ordersList" ofType="com.mybatis.model.Orders">
+  			<id property="id" column="id"/>
+  			<result property="ordersn" column="ordersn"/>
+  		</collection>
+  	</resultMap>
+  	<select id="selectUserOrdersById2" parameterType="Integer" resultMap="userAndOrders2">
+  		select u.*,o.id,o.ordersn from user u,orders o where u.id = o.user_id
+  		and u.id=#{id}
+  	</select>
+  	
+  	<!-- 一对多，根据id查询用户及其关联的订单信息：连接查询（使用POJO存储信息） -->
+  	<select id="selectUserOrdersById3" parameterType="Integer"
+  		resultType="com.mybatis.model.SelectUserOrdersById">
+  		select u.*,o.ordersn from user u,orders o where 
+  		u.id = o.user_id
+  		and u.id = #{id}
+  	</select>
 </mapper>
-
