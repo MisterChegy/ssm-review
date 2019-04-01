@@ -11,7 +11,11 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import com.mybatis.model.User;
-
+/**
+ * 普通的增删改查
+ * @author Administrator
+ *
+ */
 public class MyBatisTest {
 
 	public static void main(String[] args) {

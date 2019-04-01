@@ -91,4 +91,86 @@
   		u.id = o.user_id
   		and u.id = #{id}
   	</select>
+  	
+  	<!-- 使用if元素根据条件动态查询用户信息 -->
+  	<select id="selectUserByIf" resultMap="user" parameterType="com.mybatis.model.User">
+  		select * from user where 1=1
+  		<if test="userName!=null and userName!=''">
+  			and user_name like concat('%',#{userName},'%')
+  		</if>
+  		<if test="userPassword!=null and userPassword!=''">
+  			and user_password = #{userPassword}
+  		</if>
+  		
+  	</select>
+  	
+  	<!-- 使用trim元素根据条件动态查询用户信息 -->
+  	<select id="selectUserByTrim" resultMap="user" parameterType="com.mybatis.model.User">
+  		
+  		select * from user
+  		<trim prefix="where" prefixOverrides="and | or">
+  			<if test="userName!=null and userName!=''">
+  				and user_name like concat('%',#{userName},'%')
+  			</if>
+  			<if test="userPassword!=null and userPassword!=''">
+  				and user_password=#{userPassword}
+  			</if>
+  		</trim>
+  	</select>
+  	
+  	<!-- 使用where元素根据条件动态查询用户信息 -->
+  	<select id="selectUserByWhere" resultMap="user" parameterType="com.mybatis.model.User">
+  		select * from user
+  		<where>
+  			<if test="userName!=null and userName!=''">
+  				and user_name like concat('%',#{userName},'%')
+  			</if>
+  			<if test="userPassword!=null and userPassword!=''">
+  				and user_password=#{userPassword}
+  			</if>
+  		</where>
+  	</select>
+  	
+  	<!-- 使用set元素动态修改一个用户 -->
+  	<update id="updateUserBySet" parameterType="com.mybatis.model.User">
+  		update user
+  		<set>
+  			<if test="userName!=null">user_name=#{userName}</if>
+  			<if test="userPassword!=null">user_password=#{userPassword}</if>
+  			
+  		</set>
+  		where id=#{id}
+  	</update>
+  	
+  	<!-- 使用foreach元素查询用户信息 -->
+  	<select id="selectUserByForeach" resultMap="user" parameterType="List">
+  		select * from user where id in 
+  		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+  			#{item}
+  		</foreach>
+  	</select>
+  	
+  	<!-- 使用bind元素进行模糊查询 -->
+  	<select id="selectUserByBind" resultMap="user" parameterType="com.mybatis.model.User">
+  		<!-- bind中的user_name是com.mybatis.model.User的属性名 -->
+  		<bind name="paran_name" value="'%' + userName +'%'"/>
+  		select * from user where user_name like #{paran_name}
+  	</select>
+  	
+  	<!-- 使用choose,when,otherwise元素根据条件动态查询用户信息 -->
+  	<select id="selectUserByChoose" resultMap="user" parameterType="com.mybatis.model.User">
+  		select * from user where 1=1
+  		<choose>
+  			<when test="userName!=null and userName!=''">
+  				and user_name like concat('%',#{userName},'%')
+  			</when>
+  			<when test="userPassword!=null and userPassword!=''">
+  				and user_password = #{userPassword}
+  			</when>
+  			<otherwise>
+  				and id > 10
+  			</otherwise>
+  		</choose>
+  	</select>
+  	
 </mapper>

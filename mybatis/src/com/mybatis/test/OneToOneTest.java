@@ -9,7 +9,11 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import com.mybatis.model.Person;
 import com.mybatis.model.SelectPersonById;
-
+/**
+ * 一对一级联查询
+ * @author Administrator
+ *
+ */
 public class OneToOneTest {
 	public static void main(String[] args) {
 		try {

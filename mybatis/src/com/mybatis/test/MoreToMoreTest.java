@@ -9,7 +9,11 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import com.mybatis.model.Orders;
-
+/**
+ * 多对多级联查询
+ * @author Administrator
+ *
+ */
 public class MoreToMoreTest {
 	public static void main(String[] args) {
 		try {
