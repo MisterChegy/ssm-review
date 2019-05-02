@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.geo100.dao.CardDAO">
+	<resultMap type="com.geo100.model.Card" id="card">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="school" column="school"/>
+		<result property="lovewords" column="lovewords"/>
+		<result property="endTime" column="end_time"/>
+		
+	</resultMap>
+	
+	<select id="queryAll" resultMap="card">
+		select * from card
+	
+	</select>
+	
+	<insert id="add" parameterType="com.geo100.model.Card">
+		INSERT INTO card 
+		VALUES
+		(null,#{name},#{school},#{lovewords},#{endTime})
+	</insert>
+	
+	<delete id="deleteById" parameterType="Integer">
+		delete from card where id=#{id}
+	</delete>
+	
+	<delete id="deleteMore" parameterType="int[]">
+		DELETE FROM card
+		WHERE
+		id in (
+		<foreach separator="," item="id" collection="array">
+			#{id}
+		</foreach>
+		
+		)
+	</delete>
+</mapper>
